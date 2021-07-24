@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { SearchGifsResponse, Gif } from '../interfaces/gifs.interface';
 
 @Injectable({
@@ -11,9 +12,16 @@ export class GifsService {
   private _serviceUrl: string = 'https://api.giphy.com/v1/gifs';
   private _history: string[] = [];
   public results: Gif[] = [];
+  public _pages: number[] = [1,2,3,4,5];
+  private subject = new Subject<number>();
+  private _limit: number = 12;
 
   get history(){
     return [...this._history];
+  }
+
+  get pages(){
+    return this._pages;
   }
 
   constructor(private http: HttpClient) { 
@@ -21,9 +29,30 @@ export class GifsService {
     this.results = JSON.parse(localStorage.getItem('lastSearch')) || [];
   }
 
-  searchGifs(query: string = ''){
-    query = query.trim().toLowerCase();
+  UpdateCurrentPage(page: number){
+    this.subject.next(page);
+  }
 
+  GetCurrentPage(){
+    return this.subject.asObservable();
+  }
+
+  searchGifs(query: string = '', page: number){
+
+    let offset = 1;
+    
+    if(query === null){
+      query = this._history[0];
+    }else{
+
+      if(this._history.includes(query)){
+        this._history.splice(this._history.indexOf(query) ,1);
+        this._history.unshift(query);
+      }
+    }
+
+    query = query.trim().toLowerCase();
+    
     if(!this._history.includes(query)){
       this._history.unshift(query);
       this._history = this._history.splice(0, 10);
@@ -31,17 +60,26 @@ export class GifsService {
       localStorage.setItem('history', JSON.stringify(this._history));
     }
 
+    localStorage.setItem('currentPage', page.toString());
+
+    if(page === 1){
+      offset = 1;
+    }else{
+      offset = ((page - 1) * this._limit) + 1;
+    }
+      
     const params = new HttpParams()
     .set('api_key', this._apiKey)
-    .set('limit', '10')
     .set('q', query)
-
+    .set('offset', offset.toString())
+    .set('limit', this._limit.toString())
+    
     this.http.get<SearchGifsResponse>(`${this._serviceUrl}/search`, {params})
       .subscribe((response) => {
         this.results = response.data;
         localStorage.setItem('lastSearch', JSON.stringify(this.results));
+        this.UpdateCurrentPage(page);
       }, error => {
-        console.log(error);
-      })
+      });
   }
 }

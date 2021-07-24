@@ -11,3 +11,13 @@
         <app-results></app-results>
     </div>
 </div>
+
+<div *ngIf="showPagination" class="row mt-4 mb-4 pagination">
+    <nav aria-label="...">
+        <ul class="pagination pagination-lg">
+          <li *ngFor="let page of pages" class="page-item pointer" [ngClass]="{'active': page == currentPage}" aria-current="page">
+            <a class="page-link" (click)="ChangePage(page)">{{page}}</a>
+        </li>
+        </ul>
+      </nav>
+</div>

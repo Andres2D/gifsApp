@@ -19,7 +19,8 @@ export class SearchComponent {
       return;
     }
 
-    this.gifsService.searchGifs(value);
+    this.gifsService.UpdateCurrentPage(1);
+    this.gifsService.searchGifs(value, 1);
     
     this.txtSearch.nativeElement.value = '';
   }

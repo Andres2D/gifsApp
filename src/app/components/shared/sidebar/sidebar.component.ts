@@ -15,7 +15,8 @@ export class SidebarComponent  {
   }
 
   Search(search: string){
-    this.gifsService.searchGifs(search);
+    this.gifsService.UpdateCurrentPage(1);
+    this.gifsService.searchGifs(search, 1);
   }
 
 }
