@@ -13,7 +13,7 @@ export class GifsPageComponent implements OnInit, OnDestroy {
   showPagination: boolean = false;
   subscriber: Subscription;
 
-  @HostListener('window:scroll', ['$event']) onWindowscroll() {
+  @HostListener('window:scroll') onWindowscroll() {
     if(window.innerHeight + window.scrollY >= document.body.scrollHeight) {
       this.ChangePage(this.currentPage+1);
     }
