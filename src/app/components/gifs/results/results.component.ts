@@ -11,8 +11,6 @@ export class ResultsComponent {
   constructor(private gifsService: GifsService) { }
 
   get results(){
-    console.log(this.gifsService.results);
-    
     return this.gifsService.results;
   }
 
@@ -20,4 +18,7 @@ export class ResultsComponent {
     window.open(url, '_blank');
   }
 
+  scrollToTop() {
+    window.scrollTo(0,0);
+  }
 }

@@ -18,5 +18,4 @@ export class SidebarComponent  {
     this.gifsService.UpdateCurrentPage(1);
     this.gifsService.searchGifs(search, 1);
   }
-
 }

@@ -12,16 +12,11 @@ export class GifsService {
   private _serviceUrl: string = 'https://api.giphy.com/v1/gifs';
   private _history: string[] = [];
   public results: Gif[] = [];
-  public _pages: number[] = [1,2,3,4,5];
   private subject = new Subject<number>();
   private _limit: number = 12;
 
   get history(){
     return [...this._history];
-  }
-
-  get pages(){
-    return this._pages;
   }
 
   constructor(private http: HttpClient) { 
@@ -38,7 +33,6 @@ export class GifsService {
   }
 
   searchGifs(query: string = '', page: number){
-
     let offset = 1;
     
     if(query === null){
@@ -64,6 +58,7 @@ export class GifsService {
 
     if(page === 1){
       offset = 1;
+      this.results = [];
     }else{
       offset = ((page - 1) * this._limit) + 1;
     }
@@ -76,7 +71,9 @@ export class GifsService {
     
     this.http.get<SearchGifsResponse>(`${this._serviceUrl}/search`, {params})
       .subscribe((response) => {
-        this.results = response.data;
+        response.data.forEach((gif) => {
+          this.results.push(gif);
+        });
         localStorage.setItem('lastSearch', JSON.stringify(this.results));
         this.UpdateCurrentPage(page);
       }, error => {

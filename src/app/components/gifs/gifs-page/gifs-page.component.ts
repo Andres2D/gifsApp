@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { GifsService } from '../services/gifs.service';
 
@@ -9,10 +9,15 @@ import { GifsService } from '../services/gifs.service';
 })
 export class GifsPageComponent implements OnInit, OnDestroy {
 
-  pages: number[] = this.gifsService.pages;
   currentPage: number = 1;
   showPagination: boolean = false;
   subscriber: Subscription;
+
+  @HostListener('window:scroll', ['$event']) onWindowscroll() {
+    if(window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+      this.ChangePage(this.currentPage+1);
+    }
+  }
   
   constructor(private gifsService: GifsService) { }
 
@@ -31,11 +36,9 @@ export class GifsPageComponent implements OnInit, OnDestroy {
   ChangePage(page: number){
     this.gifsService.UpdateCurrentPage(page);
     this.gifsService.searchGifs(null, page);
-    window.scrollTo(0,0);
   }
 
   ngOnDestroy(){
     this.subscriber.unsubscribe();
   }
-
 }
