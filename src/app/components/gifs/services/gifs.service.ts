@@ -54,11 +54,8 @@ export class GifsService {
       localStorage.setItem('history', JSON.stringify(this._history));
     }
 
-    localStorage.setItem('currentPage', page.toString());
-
     if(page === 1){
       offset = 1;
-      this.results = [];
     }else{
       offset = ((page - 1) * this._limit) + 1;
     }
@@ -71,9 +68,14 @@ export class GifsService {
     
     this.http.get<SearchGifsResponse>(`${this._serviceUrl}/search`, {params})
       .subscribe((response) => {
-        response.data.forEach((gif) => {
-          this.results.push(gif);
-        });
+        if(page !== 1) {
+          response.data.forEach((gif) => {
+            this.results.push(gif);
+          });
+        } else {
+          this.results = response.data;
+        }
+        console.log(this.results);
         localStorage.setItem('lastSearch', JSON.stringify(this.results));
         this.UpdateCurrentPage(page);
       }, error => {

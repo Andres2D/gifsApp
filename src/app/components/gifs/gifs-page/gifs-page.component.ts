@@ -29,11 +29,10 @@ export class GifsPageComponent implements OnInit, OnDestroy {
     }); 
 
     this.showPagination = this.gifsService.results.length > 0 ? true : false; 
-
-    this.currentPage = (Number(localStorage.getItem('currentPage')) || 1);
   }
 
   ChangePage(page: number){
+    console.log(page);
     this.gifsService.UpdateCurrentPage(page);
     this.gifsService.searchGifs(null, page);
   }

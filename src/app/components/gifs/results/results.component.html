@@ -12,6 +12,6 @@
     </div>
 </div>
 
-<div (click)="scrollToTop()" class="top-arrow">
+<div *ngIf="results.length > 0" (click)="scrollToTop()" class="top-arrow">
     <img class="arrow" src="../../../../assets/images/Top_Arrow.svg.png" alt="top arrow">
 </div>
