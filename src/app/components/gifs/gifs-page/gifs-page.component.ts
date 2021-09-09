@@ -31,8 +31,7 @@ export class GifsPageComponent implements OnInit, OnDestroy {
 
     this.loaderSubscription = this.gifsService.getLoader()
       .subscribe( loader => {
-        //this.showLoading = loader;
-        this.showLoading = true;
+        this.showLoading = loader;
       });
   }
 
