@@ -46,5 +46,6 @@ export class GifsPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(){
     this.subscriber.unsubscribe();
+    this.loaderSubscription.unsubscribe();
   }
 }
