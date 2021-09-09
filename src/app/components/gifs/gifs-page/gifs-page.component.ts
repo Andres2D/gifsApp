@@ -12,6 +12,8 @@ export class GifsPageComponent implements OnInit, OnDestroy {
   currentPage: number = 1;
   showPagination: boolean = false;
   subscriber: Subscription;
+  loaderSubscription: Subscription;
+  showLoading: boolean = false;
 
   @HostListener('window:scroll') onWindowscroll() {
     if(window.innerHeight + window.scrollY >= document.body.scrollHeight) {
@@ -25,16 +27,21 @@ export class GifsPageComponent implements OnInit, OnDestroy {
     this.subscriber = this.gifsService.GetCurrentPage()
       .subscribe( page => {
         this.currentPage = page;
-        this.showPagination = this.gifsService.results.length > 0 ? true : false; 
-    }); 
+    });
 
-    this.showPagination = this.gifsService.results.length > 0 ? true : false; 
+    this.loaderSubscription = this.gifsService.getLoader()
+      .subscribe( loader => {
+        //this.showLoading = loader;
+        this.showLoading = true;
+      });
   }
 
   ChangePage(page: number){
-    console.log(page);
-    this.gifsService.UpdateCurrentPage(page);
-    this.gifsService.searchGifs(null, page);
+    if(!this.showLoading) {
+      this.gifsService.setLoader(true);
+      this.gifsService.UpdateCurrentPage(page);
+      this.gifsService.searchGifs(null, page);
+    }
   }
 
   ngOnDestroy(){

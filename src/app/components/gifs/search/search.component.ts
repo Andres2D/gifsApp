@@ -19,6 +19,7 @@ export class SearchComponent {
       return;
     }
 
+    this.gifsService.setLoader(true);
     this.gifsService.UpdateCurrentPage(1);
     this.gifsService.searchGifs(value, 1);
     

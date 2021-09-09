@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { SearchGifsResponse, Gif } from '../interfaces/gifs.interface';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class GifsService {
   private _history: string[] = [];
   public results: Gif[] = [];
   private subject = new Subject<number>();
+  private loader = new Subject<boolean>();
   private _limit: number = 12;
 
   get history(){
@@ -30,6 +31,14 @@ export class GifsService {
 
   GetCurrentPage(){
     return this.subject.asObservable();
+  }
+
+  setLoader(option: boolean) {
+    this.loader.next(option);
+  }
+
+  getLoader() {
+    return this.loader.asObservable();
   }
 
   searchGifs(query: string = '', page: number){
@@ -75,9 +84,10 @@ export class GifsService {
         } else {
           this.results = response.data;
         }
-        console.log(this.results);
+        
         localStorage.setItem('lastSearch', JSON.stringify(this.results));
         this.UpdateCurrentPage(page);
+        this.setLoader(false);
       }, error => {
       });
   }

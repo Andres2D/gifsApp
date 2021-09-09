@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { GifsPageComponent } from './gifs-page/gifs-page.component';
 import { SearchComponent } from './search/search.component';
 import { ResultsComponent } from './results/results.component';
-
-
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +12,8 @@ import { ResultsComponent } from './results/results.component';
     ResultsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   exports: [
     GifsPageComponent
